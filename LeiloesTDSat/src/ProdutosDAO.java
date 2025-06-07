@@ -77,5 +77,55 @@ public class ProdutosDAO {
 
         return prods;
     }
+    
+    public static boolean atualizarStatus(ProdutosDTO p) {
+        try {
+            conectaDAO conexao = new conectaDAO();
+            conexao.conectar();
 
+            String sql = "UPDATE produto SET status = 'Vendido' WHERE id = ?";
+            PreparedStatement ps = conexao.getConexao().prepareStatement(sql);
+
+            ps.setString(1, p.getStatus());
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao atualizar o registro no banco de dados." + e);
+            return false;
+        }
+    }
+    
+    
+    public static List<ProdutosDTO> listarProdutosVendidos() {
+        List<ProdutosDTO> prods = new ArrayList();
+
+        try {
+            conectaDAO conexao = new conectaDAO();
+            conexao.conectar();
+
+            String sql = "SELECT id, nome, valor, status FROM produtos WHERE status = 'Vendido'";
+
+            PreparedStatement ps = conexao.getConexao().prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                ProdutosDTO p = new ProdutosDTO();
+                p.setId(rs.getInt("id"));
+                p.setNome(rs.getString("nome"));
+                p.setValor(rs.getInt("valor"));
+                p.setStatus(rs.getString("status"));
+
+                prods.add(p);
+            }
+
+            conexao.desconectar();
+
+        } catch (SQLException se) {
+            System.err.println("Erro ao listar produtos vendidos: " + se.getMessage());
+        }
+
+        return prods;
+    }
 }
