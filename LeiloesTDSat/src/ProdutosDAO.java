@@ -78,15 +78,15 @@ public class ProdutosDAO {
         return prods;
     }
     
-    public static boolean atualizarStatus(ProdutosDTO p) {
+    public static boolean atualizarStatus(int id) {
         try {
             conectaDAO conexao = new conectaDAO();
             conexao.conectar();
 
-            String sql = "UPDATE produto SET status = 'Vendido' WHERE id = ?";
+            String sql = "UPDATE produtos SET status = 'Vendido' WHERE id = ?";
             PreparedStatement ps = conexao.getConexao().prepareStatement(sql);
 
-            ps.setString(1, p.getStatus());
+            ps.setInt(1, id);
 
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;

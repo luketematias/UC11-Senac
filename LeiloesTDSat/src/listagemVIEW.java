@@ -1,6 +1,7 @@
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -138,12 +139,22 @@ public class listagemVIEW extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVenderActionPerformed
-        String id = id_produto_venda.getText();
+        if (id_produto_venda.getText().isBlank() || id_produto_venda.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "É obrigatório preencher o campo antes de registrar uma venda!", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            int id = Integer.parseInt(id_produto_venda.getText());
         
-        ProdutosDAO produtosdao = new ProdutosDAO();
+            ProdutosDAO produtosdao = new ProdutosDAO();
+            boolean sucesso = produtosdao.atualizarStatus(id);
+            
+            if(sucesso) {
+                JOptionPane.showMessageDialog(null, "Produto vendido com sucesso!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Error ao vender produto.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+            listarProdutos();
         
-        //produtosdao.venderProduto(Integer.parseInt(id));
-        listarProdutos();
     }//GEN-LAST:event_btnVenderActionPerformed
 
     private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendasActionPerformed
